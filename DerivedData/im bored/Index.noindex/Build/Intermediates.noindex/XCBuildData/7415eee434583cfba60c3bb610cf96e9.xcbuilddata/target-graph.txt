@@ -1,0 +1,5 @@
+Target dependency graph (4 targets)
+Target 'Matrix' in project 'im bored' (no dependencies)
+Target 'Full Neural Network Tool' in project 'im bored' (no dependencies)
+Target 'Linear Regression' in project 'im bored' (no dependencies)
+Target 'Logic Gates' in project 'im bored' (no dependencies)

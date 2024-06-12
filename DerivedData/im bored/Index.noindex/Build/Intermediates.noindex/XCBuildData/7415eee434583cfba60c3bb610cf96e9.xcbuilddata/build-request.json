@@ -1,0 +1,69 @@
+{
+  "buildCommand" : {
+    "command" : "prepareForIndexing",
+    "enableIndexBuildArena" : true,
+    "targets" : null
+  },
+  "configuredTargets" : [
+    {
+      "guid" : "4cc644d2e6f11d0fa5cf26aeb9bc24489fb0601efbb3a85eaab4594637e6b11a"
+    },
+    {
+      "guid" : "4cc644d2e6f11d0fa5cf26aeb9bc24483b20da30c9f757bc95a30ef1a9173295"
+    },
+    {
+      "guid" : "4cc644d2e6f11d0fa5cf26aeb9bc244890dbb860999bf63f727fcaee74633b6b"
+    },
+    {
+      "guid" : "4cc644d2e6f11d0fa5cf26aeb9bc24487b577e530675b2246c366ff148c62904"
+    }
+  ],
+  "containerPath" : "/Users/nandan/Documents/im bored/im bored.xcodeproj",
+  "continueBuildingAfterErrors" : true,
+  "enableIndexBuildArena" : false,
+  "hideShellScriptEnvironment" : false,
+  "parameters" : {
+    "action" : "indexbuild",
+    "activeArchitecture" : "arm64",
+    "activeRunDestination" : {
+      "disableOnlyActiveArch" : false,
+      "platform" : "macosx",
+      "sdk" : "macosx14.2",
+      "sdkVariant" : "macos",
+      "supportedArchitectures" : [
+        "arm64e",
+        "arm64",
+        "x86_64"
+      ],
+      "targetArchitecture" : "arm64"
+    },
+    "arenaInfo" : {
+      "buildIntermediatesPath" : "/Users/nandan/Documents/im bored/DerivedData/im bored/Index.noindex/Build/Intermediates.noindex",
+      "buildProductsPath" : "/Users/nandan/Documents/im bored/DerivedData/im bored/Index.noindex/Build/Products",
+      "derivedDataPath" : "/Users/nandan/Documents/im bored/DerivedData",
+      "indexDataStoreFolderPath" : "/Users/nandan/Documents/im bored/DerivedData/im bored/Index.noindex/DataStore",
+      "indexEnableDataStore" : true,
+      "indexPCHPath" : "/Users/nandan/Documents/im bored/DerivedData/im bored/Index.noindex/PrecompiledHeaders",
+      "indexRegularBuildIntermediatesPath" : "/Users/nandan/Documents/im bored/Build/Intermediates.noindex",
+      "indexRegularBuildProductsPath" : "/Users/nandan/Documents/im bored/Build/Products",
+      "pchPath" : "/Users/nandan/Documents/im bored/DerivedData/im bored/Index.noindex/Build/Intermediates.noindex/PrecompiledHeaders"
+    },
+    "configurationName" : "Debug",
+    "overrides" : {
+      "synthesized" : {
+        "table" : {
+          "ENABLE_PREVIEWS" : "NO",
+          "ENABLE_XOJIT_PREVIEWS" : "NO",
+          "ONLY_ACTIVE_ARCH" : "YES"
+        }
+      }
+    }
+  },
+  "qos" : "utility",
+  "schemeCommand" : "launch",
+  "showNonLoggedProgress" : true,
+  "useDryRun" : false,
+  "useImplicitDependencies" : true,
+  "useLegacyBuildLocations" : false,
+  "useParallelTargets" : true
+}
