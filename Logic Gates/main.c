@@ -13,7 +13,7 @@ double scorer(double w1, double w2, double b){
     double score = 0;
     for(int i = 0; i < or_training_size; i++){
         double predicted = w1*or_training_data[i][0] + w2*or_training_data[i][1] + b;
-        predicted = sigmoid(predicted);
+        //predicted = sigmoid(predicted);
         double err = predicted - or_training_data[i][2];
         score += pow(err,2.0);
     }
@@ -42,9 +42,10 @@ int main(void) {
     }
     printf("Initial Score: %lf\n",score);
     printf("Final Score: %lf\n", scorer(w1, w2, b));
-    printf("Prediction of 1||1: %lf\n", sigmoid(w1*1+w2*1+b));
+    /*printf("Prediction of 1||1: %lf\n", sigmoid(w1*1+w2*1+b));
     printf("Prediction of 1||0: %lf\n",sigmoid(w1*1+w2*0+b));
     printf("Prediction of 0||1: %lf\n", sigmoid(w1*0+w2*1+b));
-    printf("Prediction of 0||0: %lf\n", sigmoid(w1*0+w2*0+b));
+    printf("Prediction of 0||0: %lf\n", sigmoid(w1*0+w2*0+b));*/
+    printf("21 & 36: %lf\n",w1*21+w2*36+b);
     return 0;
 }

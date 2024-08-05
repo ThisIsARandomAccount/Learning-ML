@@ -9,10 +9,10 @@
 
 // OR-Gate model
 const double or_training_data[][3] = {
-    {0,0,0},
-    {0,1,1},
-    {1,0,1},
-    {1,1,1}
+    {72,99,27},
+    {27,45,18},
+    {18,39,21},
+    {13,21,7}
 };
 
 double sigmoid(double x);

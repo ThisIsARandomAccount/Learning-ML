@@ -144,6 +144,140 @@ Matrix* load(char* path){
     return matrix;
 } // SUCCESS
 
+/// Returns random double such that min <= x <= max. Does NOT seed random.
+/// - Parameters:
+///   - min: Minimum inclusive value
+///   - max: Maximum inclusive value
+double rand_double(double min, double max){
+    double num = rand(); // 0 <= x <= RAND_MAX
+    num /= (double)(RAND_MAX); // 0 <= x <= 1e
+    double diff = max - min;
+    num *= diff; // 0 <= x <= max-min
+    num += min; // min <= x <= max
+    
+    return num;
+} // SUCCESS
+
+/// Populates matrix with random values such that min <= x <= max
+/// - Parameters:
+///   - to_randomize: Matrix to populate
+///   - min: Minimum value
+///   - max: Maximum value
+void randomize(Matrix* to_randomize, double min, double max){
+    for(int i = 0; i < to_randomize->rows; i++){
+        for(int j = 0; j < to_randomize->cols; j++){
+            to_randomize->data[i][j] = rand_double(min, max);
+        }
+    }
+    return;
+} // SUCCESS
+
+/// Flattens a matrix, moving left to right primarily and top to bottom secondarily
+/// - Parameters:
+///   - to_flatten: Matrix to be flattened
+///   - row_col_bool: A boolean indicating whether the resultant matrix should be a row or a column, 0 is a row, 1 is a column, any other value will not throw an error but be treated as a column, for simplicity
+Matrix* flatten(Matrix* to_flatten, int row_col_bool){
+    Matrix* matrix = (row_col_bool == 0)?create(1,to_flatten->rows*to_flatten->cols): create(to_flatten->rows * to_flatten->cols, 1);
+    for(int i = 0; i < to_flatten->rows; i++){
+        for(int j = 0; j < to_flatten->cols; j++){
+            if(row_col_bool == 0){
+                matrix->data[0][i*to_flatten->cols+j] = to_flatten->data[i][j];
+            }
+            else{
+                matrix->data[i*to_flatten->cols+j][0] = to_flatten->data[i][j];
+            }
+        }
+    }
+    return matrix;
+} // SUCCESS
+
+/// Finds the row index (starts at 0) of the maximum value in a column of a matrix
+/// - Parameters:
+///   - input: The matrix to be processed
+///   - col: The column of the matrix to consider
+int argmax(Matrix* input, int col){
+    double current_max = input->data[0][col];
+    int id_max = 0;
+    for(int i = 1; i < input->rows; i++){
+        if(input->data[i][col] > current_max){
+            current_max = input->data[i][col];
+            id_max = i;
+        }
+    }
+    return id_max;
+} // SUCCESS
+
+/// Performs and returns dot product of an Mx1 and 1xM matrix. Sets errno to -1 if the inputs have improper dimensions.
+/// - Parameters:
+///   - m1: First matrix to dot
+///   - m2: Second matrix to dot
+double primitive_dot(Matrix* m1, Matrix* m2){
+    if(m1->rows != 1 && m1->cols != 1){
+        printf("Improper matrix dimensions\n");
+        errno = -1;
+        return 0;
+    }
+    else if(m2->rows != 1 && m2->cols != 1){
+        printf("Improper matrix dimensions\n");
+        errno = -1;
+        return 0;
+    }
+    if((m1->rows == m2->cols)&&(m1->cols == m2->rows)){
+        double sum = 0;
+        Matrix* p_m1 = flatten(m1, 0);
+        Matrix* p_m2 = flatten(m2, 0);
+        int its;
+        if(m1->rows == 1){
+            its = m1->cols;
+        }
+        else{
+            its = m1->rows;
+        }
+        for(int i = 0; i < its ; i++){
+            sum += p_m1->data[0][i] * p_m2->data[0][i];
+        }
+        free(p_m1);
+        free(p_m2);
+        return sum;
+    }
+    else{
+        printf("Improper matrix dimensions\n");
+        errno = -1;
+        return 0;
+    }
+} // SUCCESS
+
+/// Performs and returns dot product of an MxN and NxP matrix. The return is dimension MxP. Sets errno to -1 if inputs are of improper dimension
+/// - Parameters:
+///   - m1: A matrix
+///   - m2: Another matrix
+Matrix* dot(Matrix* m1, Matrix* m2){
+    if(m1->cols == m2->rows){
+        Matrix* to_return = create(m1->rows, m2->cols);
+        
+        return NULL;
+    }
+    else if(m1->rows == m2->cols){
+        Matrix* to_return = create(m2->rows, m1->cols);
+        return NULL;
+    }
+    else{
+        printf("Improper matrix dimensions\n");
+        errno = -1;
+        return NULL;
+    }
+}
+
 int main(void){
+    srand((unsigned int)time(NULL));
+    Matrix* first = create(2,3);
+    Matrix* second = create(3,1);
+    randomize(first,0,10);
+    randomize(second,0,10);
+    print_matrix(first);
+    print_matrix(second);
+    printf("Dot Product: %lf\n",primitive_dot(first,second));
+    free_matrix(first);
+    free_matrix(second);
     return 0;
 }

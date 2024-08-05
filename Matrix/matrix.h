@@ -6,6 +6,8 @@
 #include <math.h>
 #include "file_reader.h"
 #include <string.h>
+#include <time.h>
+#include <errno.h>
 
 #define file_path "/Users/nandan/Documents/matrix.txt"
 
