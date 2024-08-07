@@ -28,7 +28,7 @@ Matrix* create(int rows, int cols){
     }
     
     return matrix;
-} // SUCCESS
+}
 
 /// Fill matrix with single value
 /// - Parameters:
@@ -41,7 +41,7 @@ void fill(Matrix* matrix, double num){
         }
     }
     return;
-} // SUCCESS
+}
 
 /// Copy data into matrix
 /// - Parameters:
@@ -54,7 +54,7 @@ void copy(Matrix* matrix, double** data){
         }
     }
     return;
-} // SUCCESS
+}
 
 /// Free matrix structure and all members
 /// - Parameter matrix: matrix to free
@@ -66,7 +66,7 @@ void free_matrix(Matrix* matrix){
     free(matrix);
     matrix = NULL;
     return;
-} // SUCCESS
+}
 
 /// Prints the matrix structure. Rows are enclosed by | character and separated by newline. Entries are separated by tabspace
 /// - Parameter matrix: Matrix to print
@@ -80,7 +80,7 @@ void print_matrix(Matrix* matrix){
     }
     printf("-- END MATRIX --\n");
     return;
-} // SUCCESS
+}
 
 ///  Returns pointer to copy of provided matrix
 /// - Parameter to_copy: Matrix to copy
@@ -88,7 +88,7 @@ Matrix* full_copy(Matrix* to_copy){
     Matrix* to_return = create(to_copy->rows, to_copy->cols);
     copy(to_return, to_copy->data);
     return to_return;
-} // SUCCESS
+}
 
 /// Saves matrix to file.
 /// First number is rows, second number is columns.
@@ -112,7 +112,7 @@ void save(Matrix* to_save, char* path){
     printf("Saved to %s\n",path);
     fclose(file);
     return;
-} // SUCCESS
+}
 
 /// Load matrix from file
 /// - Parameter path: File path to load matrix form (must be .txt)
@@ -142,7 +142,7 @@ Matrix* load(char* path){
     copy(matrix,new_data);
     printf("Loaded from %s\n", path);
     return matrix;
-} // SUCCESS
+}
 
 /// Returns random double such that min <= x <= max. Does NOT seed random.
 /// - Parameters:
@@ -156,7 +156,7 @@ double rand_double(double min, double max){
     num += min; // min <= x <= max
     
     return num;
-} // SUCCESS
+}
 
 /// Populates matrix with random values such that min <= x <= max
 /// - Parameters:
@@ -170,7 +170,7 @@ void randomize(Matrix* to_randomize, double min, double max){
         }
     }
     return;
-} // SUCCESS
+}
 
 /// Flattens a matrix, moving left to right primarily and top to bottom secondarily
 /// - Parameters:
@@ -189,7 +189,7 @@ Matrix* flatten(Matrix* to_flatten, int row_col_bool){
         }
     }
     return matrix;
-} // SUCCESS
+}
 
 /// Finds the row index (starts at 0) of the maximum value in a column of a matrix
 /// - Parameters:
@@ -205,79 +205,172 @@ int argmax(Matrix* input, int col){
         }
     }
     return id_max;
-} // SUCCESS
+}
 
-/// Performs and returns dot product of an Mx1 and 1xM matrix. Sets errno to -1 if the inputs have improper dimensions.
-/// - Parameters:
-///   - m1: First matrix to dot
-///   - m2: Second matrix to dot
-double primitive_dot(Matrix* m1, Matrix* m2){
-    if(m1->rows != 1 && m1->cols != 1){
-        printf("Improper matrix dimensions\n");
-        errno = -1;
-        return 0;
-    }
-    else if(m2->rows != 1 && m2->cols != 1){
-        printf("Improper matrix dimensions\n");
-        errno = -1;
-        return 0;
-    }
-    if((m1->rows == m2->cols)&&(m1->cols == m2->rows)){
-        double sum = 0;
-        Matrix* p_m1 = flatten(m1, 0);
-        Matrix* p_m2 = flatten(m2, 0);
-        int its;
-        if(m1->rows == 1){
-            its = m1->cols;
-        }
-        else{
-            its = m1->rows;
-        }
-        for(int i = 0; i < its ; i++){
-            sum += p_m1->data[0][i] * p_m2->data[0][i];
-        }
-        free(p_m1);
-        free(p_m2);
-        return sum;
-    }
-    else{
-        printf("Improper matrix dimensions\n");
-        errno = -1;
-        return 0;
-    }
-} // SUCCESS
-
-/// Performs and returns dot product of an MxN and NxP matrix. The return is dimension MxP. Sets errno to -1 if inputs are of improper dimension
+/// Performs and returns dot product of an m1 (MxN) and m2 (NxP). The return is dimension MxP.
 /// - Parameters:
 ///   - m1: A matrix
 ///   - m2: Another matrix
 Matrix* dot(Matrix* m1, Matrix* m2){
     if(m1->cols == m2->rows){
         Matrix* to_return = create(m1->rows, m2->cols);
-        
-        return NULL;
-    }
-    else if(m1->rows == m2->cols){
-        Matrix* to_return = create(m2->rows, m1->cols);
-        return NULL;
+        for(int i = 0; i < m1->rows; i++){ // For every row
+            for(int j = 0; j < m2->cols; j++){ // For every column
+                double sum = 0;
+                for(int k = 0; k < m1->cols; k++){ // For every column in the row and every row in the column
+                    sum += m1->data[i][k] * m2->data[k][j];
+                }
+                to_return->data[i][j] = sum;
+            }
+        }
+        return to_return;
     }
     else{
-        printf("Improper matrix dimensions\n");
-        errno = -1;
-        return NULL;
+        printf("Improper matrix dimensions: dot\n");
+        exit(1);
     }
+}
+
+/// Performs and returns addition of two matrices m1 and m2. m1 and m2 must have same dimensions. returned matrix is same dimension as well
+/// - Parameters:
+///   - m1: A matrix
+///   - m2: Another matrix
+Matrix* add(Matrix* m1, Matrix* m2){
+    if((m1->rows != m2->rows)||(m1->cols != m2->cols)){
+        printf("Improper matrix dimenstions: add\n");
+        exit(1);
+    }
+    Matrix* to_return = create(m1->rows,m1->cols);
+    for(int i = 0; i < m1->rows; i++){
+        for(int j = 0; j < m1->cols; j++){
+            to_return->data[i][j] = m1->data[i][j] + m2->data[i][j];
+        }
+    }
+    return to_return;
+}
+
+/// Performs and returns subtraction of two matrices m1 and m2 that are the same dimensions. returned matrix is also same dimesion. In the expression a - b, a would be the minuend and b would be the subtrahend.
+/// - Parameters:
+///   - m1: The minuend matrix
+///   - m2: The subtrahend matrix
+Matrix* subtract(Matrix* m1, Matrix* m2){
+    if((m1->rows != m2->rows)||(m1->cols != m2->cols)){
+        printf("Improper matrix dimenstions: subtract\n");
+        exit(1);
+    }
+    Matrix* to_return = create(m1->rows,m1->cols);
+    for(int i = 0; i < m1->rows; i++){
+        for(int j = 0; j < m1->cols; j++){
+            to_return->data[i][j] = m1->data[i][j] - m2->data[i][j];
+        }
+    }
+    return to_return;
+}
+
+/// Applys provided function to each entry in a matrix and returns a new matrix with these new values
+/// - Parameters:
+///   - m: Matrix to apply it to
+///   - func: function to apply
+Matrix* apply(Matrix* m, double(*func)(double)){
+    Matrix* to_return = create(m->rows,m->cols);
+    for(int i = 0; i < m->rows; i++){
+        for(int j = 0; j < m->cols; j++){
+            to_return->data[i][j] = func(m->data[i][j]);
+        }
+    }
+    return to_return;
+}
+
+/// Scales matrix by scalar num
+/// - Parameters:
+///   - m: Matrix to scale
+///   - num: Scalar num
+Matrix* scale(Matrix* m, double num){
+    Matrix* to_return = create(m->rows,m->cols);
+    for(int i = 0; i < m->rows; i++){
+        for(int j = 0; j < m->cols; j++){
+            to_return->data[i][j] = num * m->data[i][j];
+        }
+    }
+    return to_return;
+}
+
+/// Switches rows and columns of matrix
+/// - Parameter m: Matrix to transpose
+Matrix* transpose(Matrix* m){
+    Matrix* to_return = create(m->cols,m->rows);
+    for(int i = 0; i < m->cols; i++){
+        for(int j = 0; j < m->rows; j++){
+            to_return->data[i][j] = m->data[j][i];
+        }
+    }
+    return to_return;
+}
+
+/// Returns pointer to row echelon version of inputted matrix
+/// - Parameter m: Matrix to "row-echelon-ize"
+Matrix* row_echelon(Matrix* m){
+    Matrix* to_return = full_copy(m);
+    for(int i = 0; i < m->rows-1; i++){
+        for(int k = i+1; k < m->rows; k++){
+            double multiplier = 1;
+            int divide_by_zero_flag = 0;
+            if(to_return->data[i][i] != 0){
+                multiplier = (to_return->data[k][i]/to_return->data[i][i]);
+            }
+            else{
+                divide_by_zero_flag = 1;
+            }
+            for(int j = 0; j < m->cols; j++){
+                if(!divide_by_zero_flag){
+                    to_return->data[k][j] -= to_return->data[i][j] * multiplier;
+                }
+            }
+        }
+    }
+    return to_return;
+}
+
+/// Calculates determinant of matrix. Internally calculates row echelon form (does not require row echelon matrix)
+/// - Parameter m: Matrix
+double determinant(Matrix* m){
+    if(m->rows != m->cols){
+        printf("Improper dimensions: determinant requires square matrix\n");
+        exit(1);
+    }
+    Matrix* simple = row_echelon(m);
+    double determinant = 1;
+    for(int i = 0; i < simple->rows; i++){
+        determinant *= simple->data[i][i];
+    }
+    free_matrix(simple);
+    return determinant;
+}
+
+/// Calculates determinant of matrix
+/// - Parameter simple: Matrix in row echelon form
+double r_determinant(Matrix* simple){
+    if(simple->rows != simple->cols){
+        printf("Improper dimensions: determinant requires square matrix\n");
+        exit(1);
+    }
+    double determinant = 1;
+    for(int i = 0; i < simple->rows; i++){
+        determinant *= simple->data[i][i];
+    }
+    return determinant;
 }
 
 int main(void){
     srand((unsigned int)time(NULL));
-    Matrix* first = create(2,3);
-    Matrix* second = create(3,1);
-    randomize(first,0,10);
-    randomize(second,0,10);
-    print_matrix(first);
-    print_matrix(second);
-    printf("Dot Product: %lf\n",primitive_dot(first,second));
-    free_matrix(first);
-    free_matrix(second);
+    Matrix* original = create(5,5);
+    randomize(original,0,100);
+    Matrix* simplified = row_echelon(original);
+    print_matrix(original);
+    print_matrix(simplified);
+    printf("%lf\n",determinant(original));
+    printf("%lf\n",r_determinant(simplified));
+    free_matrix(original);
+    free_matrix(simplified);
     return 0;
 }
