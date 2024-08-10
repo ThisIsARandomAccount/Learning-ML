@@ -361,16 +361,89 @@ double r_determinant(Matrix* simple){
     return determinant;
 }
 
+/// Calculates trace of matrix
+/// - Parameter m: Matrix to calculate trace of
+double trace(Matrix* m){
+    if(m->rows == m->cols){
+        double trace = 0;
+        for(int i = 0; i < m->rows; i++){
+            trace += m->data[i][i];
+        }
+        return trace;
+    }
+    printf("Improper dimensions: trace\n");
+    exit(1);
+}
+
+/// Calculates cofactor matrix
+/// - Parameter m: Matrix to calculate cofactor of
+Matrix* cofactor(Matrix* m){
+    if(m->rows != m->cols){
+        printf("Improper dimensions: cofactor requires square matrix\n");
+        exit(1);
+    }
+    Matrix* to_return = create(m->rows, m->cols);
+    Matrix* temp = create(m->rows - 1, m->cols - 1);
+    for(int i = 0; i < m->rows; i++){
+        for(int j = 0; j < m->cols; j++){
+            int c = 0;
+            int r = 0;
+            double mult = pow(-1,i+j);
+            for(int k = 0; k < m->rows; k++){
+                for(int a = 0; a < m->cols; a++){
+                    if(k != i && a != j){
+                        temp->data[r][c] = m->data[k][a];
+                        c++;
+                        if((c/temp->cols)==1){
+                            c = 0;
+                            r++;
+                        }
+                    }
+                }
+            }
+            to_return->data[i][j] = mult* determinant(temp);
+        }
+    }
+    free_matrix(temp);
+    return to_return;
+}
+
+/// Calculates adjugate matrix
+/// - Parameter m: Matrix to get adjugate of
+Matrix* adjugate(Matrix* m){
+    if(m->rows != m->cols){
+        printf("Improper dimensions: adjugate requires square matrix\n");
+        exit(1);
+    }
+    return(transpose(cofactor(m)));
+}
+
+/// Calculates inverse of matrix m. If inverse does not exist due to determinant = 0, returns null ptr
+/// - Parameter m: Matrix to inverse
+Matrix* inverse(Matrix* m){
+    if(m->rows != m->cols){
+        printf("Improper dimensions: inverse requires square matrix\n");
+        exit(1);
+    }
+    double deter = determinant(m);
+    if(deter == 0){
+        return NULL;
+    }
+    return(scale(adjugate(m),1.0/deter));
+}
+
 int main(void){
     srand((unsigned int)time(NULL));
-    Matrix* original = create(5,5);
-    randomize(original,0,100);
-    Matrix* simplified = row_echelon(original);
+    Matrix* original = create(100,100);
+    randomize(original,0,10);
+    Matrix* cofac = inverse(original);
+    if(cofac == NULL){
+        printf("No inverse\n");
+    }
     print_matrix(original);
-    print_matrix(simplified);
-    printf("%lf\n",determinant(original));
-    printf("%lf\n",r_determinant(simplified));
+    if(cofac != NULL){
+        print_matrix(cofac);}
+    free_matrix(cofac);
     free_matrix(original);
-    free_matrix(simplified);
     return 0;
 }

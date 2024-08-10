@@ -40,7 +40,9 @@ Matrix* transpose(Matrix* m); // SUCCESS
 Matrix* row_echelon(Matrix* m); // SUCCESS
 double determinant(Matrix* m); // SUCCESS
 double r_determinant(Matrix* simple); // SUCCESS
-
-
+double trace(Matrix* m); // SUCCESS
+Matrix* cofactor(Matrix* m); // SUCCESS
+Matrix* adjugate(Matrix* m); // SUCCESS
+Matrix* inverse(Matrix* m); // SUCCESS
 
 #endif
